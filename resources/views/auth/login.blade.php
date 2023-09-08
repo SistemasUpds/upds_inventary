@@ -103,7 +103,7 @@ body {
 <body>
     <div class="login">
         <div class="login-triangle"></div>
-    <h2 class="login-header">CONTROL CARNETS</h2>
+    <h2 class="login-header">UPDS INVENTARIO</h2>
                         <form class="login-container" method="POST" action="{{ url('/login') }}">
                             {{ csrf_field() }}
                             <div class="{{ $errors->has('email') ? ' has-error' : '' }}">

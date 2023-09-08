@@ -12,7 +12,6 @@ class ObservacionSeeders extends Seeder
      */
     public function run()
     {
-        
         Observacion::create(['observacion' =>'Termino su Vida Util']);
         Observacion::create(['observacion' =>'Porque esta roto']);
         Observacion::create(['observacion' =>'Por Viejo']);

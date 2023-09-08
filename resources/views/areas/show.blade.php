@@ -67,6 +67,7 @@
                                 <th scope="col">Fecha de compra</th>
                                 <th scope="col">Descripción</th>
                                 <th scope="col">Estado</th>
+                                <th scope="col">De baja</th>
                                 <th scope="col">Ver</th>
                                 <th scope="col">Historial</th>
                             </tr>
@@ -80,6 +81,7 @@
                                     <td>{{$item->tipo->nombre}}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->fecha_compra)->format('d/m/Y') }}</td>
                                     <td>{{ strlen($item->descripcion) > 25 ? substr($item->descripcion, 0, 25) . '...' : $item->descripcion }}</td>
+                                    <td>{{ $item->Estado->estado }}</td>
                                     @if ($item->estado == '1')
                                         <td><a type="button" data-toggle="{{$user->permiso->dar_baja_item == 0 ? '' : 'modal'}}" data-target="#modal-familiar"><span class="badge bg-success">Activo</span></a></td>
                                         @include('areas.modal')

@@ -18,6 +18,7 @@ class CreateItemsTable extends Migration
             $table->unsignedBigInteger('tipo_id')->nullable();
             $table->unsignedBigInteger('centro_id')->nullable();
             $table->unsignedBigInteger('obserb_id')->nullable();
+            $table->unsignedBigInteger('estado_id')->nullable();
             $table->string('novus', 200);
             $table->integer('estado')->default(1);
             $table->text('razon')->nullable();

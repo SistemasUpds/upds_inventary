@@ -9,7 +9,7 @@ class Item extends Model
 {
     protected $table = "items";
     protected $primaryKey = "id";
-    protected $fillable = ['tipo_id', 'image', 'novus','obserb_id', 'centro_id','activo_id', 'area_id', 'estado', 'qr_code', 'descripcion', 'codigo', 'fecha_compra', 'fecha_baja', 'user_baja'];
+    protected $fillable = ['tipo_id', 'image', 'estado_id', 'novus','obserb_id', 'centro_id','activo_id', 'area_id', 'estado', 'qr_code', 'descripcion', 'codigo', 'fecha_compra', 'fecha_baja', 'user_baja'];
 
     public function area()
     {
@@ -19,6 +19,11 @@ class Item extends Model
     public function tipo()
     {
       return $this->belongsTo(Tipo::class);
+    }
+
+    public function Estado()
+    {
+      return $this->belongsTo(Estado::class, 'estado_id');
     }
 
     public function activo()

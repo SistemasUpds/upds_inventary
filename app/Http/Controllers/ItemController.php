@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Activo;
 use App\Analisis;
 use App\Area;
+use App\Estado;
 use App\Item;
 use App\MoveHistory;
 use App\Observacion;
@@ -31,11 +32,12 @@ class ItemController extends Controller
         $tipoActivo = Tipo::all();
         $areas = Area::all();
         $analisis = Analisis::all();
+        $estados = Estado::all();
         if ($id === '0') {
-            return view('items.create')->with('analis', $analisis)->with('areas', $areas)->with('tipoActivo', $tipoActivo);;
+            return view('items.create', compact('estados'))->with('analis', $analisis)->with('areas', $areas)->with('tipoActivo', $tipoActivo);;
         } else {
             $idarea = Area::find($id);
-            return view('items.create')->with('analis', $analisis)->with('areas', $areas)->with('tipoActivo', $tipoActivo)->with('idarea', $idarea);
+            return view('items.create', compact('estados'))->with('analis', $analisis)->with('areas', $areas)->with('tipoActivo', $tipoActivo)->with('idarea', $idarea);
         }
     }
 
@@ -47,6 +49,7 @@ class ItemController extends Controller
             'descripcion' => 'required',
             'id_area' => 'required',
             'id_tipo' => 'required',
+            'id_estado' => 'required',
             'fecha' => 'required',
             'id_centro' => 'required'
         ]);
@@ -58,6 +61,7 @@ class ItemController extends Controller
         $coll->descripcion = $request->descripcion;
         $coll->area_id = $request->id_area;
         $coll->tipo_id = $request->id_tipo;
+        $coll->estado_id = $request->id_estado;
         $coll->novus = $request->novus;
         $coll->centro_id = $request->id_centro;
         $coll->fecha_compra = $request->fecha;
@@ -125,11 +129,12 @@ class ItemController extends Controller
         $tipoActivo = Tipo::all();
         $analis = Analisis::all();
         // retrieve item
+        $estados = Estado::all();
         $item = Item::find($id);
         $activos = Activo::all();
         // retrieve areas
         $areas = Area::all();
-        return view('items.edit')
+        return view('items.edit', compact('estados'))
             ->with('item', $item)
             ->with('analis', $analis)
             ->with('areas', $areas)
@@ -149,6 +154,7 @@ class ItemController extends Controller
         $item = Item::find($id);
         $item->activo_id = $request->nombre;
         $item->descripcion = $request->descripcion;
+        $item->estado_id = $request->id_estado;
         $item->centro_id = $request->id_centro;
         if ($item->area_id != $request->id_area) {
             $nomArea = Area::find($request->id_area);

@@ -77,6 +77,28 @@
                         @endif
                     </div>
                     <div class="form-floating mb-3">
+                        <select class="form-select" id="id_estado" name="id_estado" aria-label="Centro de Analisis">
+                        <option value="" selected disabled>Estado del Activo</option>
+                            @if( count($estados) > 0 )
+                                @foreach( $estados as $collection )
+                                    @if ( $collection->id == old('id_estado') )
+                                    <option value="{{$collection->id}}">{{$collection->estado}}</option>
+                                    @elseif ( $collection->id == $item->centro_id && old('id_estado') === null )
+                                        <option value="{{$collection->id}}" selected>{{$collection->estado}}</option>
+                                    @else
+                                        <option value="{{$collection->id}}">{{$collection->estado}}</option>
+                                    @endif
+                                @endforeach
+                            @endif
+                        </select>
+                        <label for="id_area">Estado del Activo</label>
+                        @if ($errors->has('id_estado'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('id_estado') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                    <div class="form-floating mb-3">
                         <input type="file" name="image" class="form-control" id="uploadInput">
                     </div>
                     <div class="form-floating mb-3">
