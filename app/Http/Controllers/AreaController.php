@@ -86,14 +86,23 @@ class AreaController extends Controller
         return redirect('/')->with('success', 'Area eliminada con éxito');
     }
 
-    
-    /*public function generarPDF(Request $request)
-    {
-        
-        
-        $pdf = PDF::loadView('areas.pdf', compact('datosFiltrados', 'area'));
-        return $pdf->download('Reporte.pdf');
-    }*/
+    public function createActivo() {
+        $tipos = Tipo::all();
+        return view('activo.create', compact('tipos'));
+    }
+
+    public function storeActivo(Request $request) {
+        // Validate
+        $this->validate($request, [
+            'nombre' => 'required',
+            'id_tipo' => 'required'
+        ]);
+        $coll = new Area();
+        $coll->activo = $request->nombre;
+        $coll->tipo_id = $request->id_tipo;
+        $coll->save();
+        return redirect('/')->with('success', 'Registrado con éxito el activo.');
+    }
 
     public function generarPDF(Request $request)
     {

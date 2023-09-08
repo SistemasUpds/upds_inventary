@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function 
     Route::get('/users/{id}/edit', ['uses' => 'UsersController@edit']);
     Route::post('/users/{id}/edit', ['uses' => 'UsersController@update']);
     Route::delete('/users/{id}/delete', ['uses' => 'UsersController@destroy']);
+    Route::get('/users/{id}/activar', ['uses' => 'UsersController@activarCuenta']);
     Route::get('/users/{id}/show', ['uses' => 'UsersController@show']);
     ///Sin permiso
     Route::get('/error', ['uses' => 'HomeController@sinPermiso']);
@@ -43,6 +44,8 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function 
     Route::post('/password/{id}/reset', ['uses' => 'UsersController@resetPassword']);
     
     Route::get('/obtener-activos-por-tipo/{tipoId}', 'ItemController@obtenerActivosPorTipo');
+    Route::get('/activo/create', 'AreaController@createActivo');
+    Route::post('/activo',['uses' => 'AreaController@storeActivo']);
 
 });
 

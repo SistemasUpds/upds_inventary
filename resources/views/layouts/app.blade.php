@@ -57,6 +57,9 @@
                         <li class="nav-item">
                             <a class="nav-link"  style="color:white" href="{{ url('admin/users') }}"><i class="bi bi-person-lines-fill"></i> Usuarios</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="color:white" href="{{ url('admin/activo/create') }}" ><i class="bi bi-plus"></i> Activo</a>
+                        </li>
                     @endif
                     <li class="nav-item dropdown pe-3">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
