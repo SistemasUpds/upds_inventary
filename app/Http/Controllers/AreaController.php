@@ -32,7 +32,8 @@ class AreaController extends Controller
         $this->validate($request, [
             'nombre' => 'required',
             'encargado' => 'required',
-            'descripcion' => 'required'
+            'descripcion' => 'required',
+            'sigla' => 'required',
         ]);
 
         // Store
@@ -40,6 +41,13 @@ class AreaController extends Controller
         $coll->nombre = $request->nombre;
         $coll->descripcion = $request->descripcion;
         $coll->encargado = $request->encargado;
+        $areaSigla = Area::all();
+        foreach ($areaSigla as $item) {
+            if ($request->sigla ==  $item->sigla) {
+                return back()->with('success', 'La sigla ya existe debe de ser Unica.');
+            }
+        }
+        $coll->sigla = $request->sigla;
         $coll->save();
         return redirect('/')->with('success', 'Registrado con éxito.');
     }
@@ -65,7 +73,7 @@ class AreaController extends Controller
         $this->validate($request, [
             'nombre' => 'required',
             'encargado' => 'required',
-            'descripcion' => 'required'
+            'descripcion' => 'required',
         ]);
 
         // Update
@@ -73,6 +81,15 @@ class AreaController extends Controller
         $coll->nombre = $request->nombre;
         $coll->encargado = $request->encargado;
         $coll->descripcion = $request->descripcion;
+        $areaSigla = Area::all();
+        if ($coll->sigla != $request->sigla) {
+            foreach ($areaSigla as $item) {
+                if ($request->sigla ==  $item->sigla ) {
+                    return back()->with('success', 'La sigla ya existe debe de ser Unica.');
+                }
+            }
+        }
+        $coll->sigla = $request->sigla;
         $coll->update();
 
         // Redirect

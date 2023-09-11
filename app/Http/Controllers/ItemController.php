@@ -233,7 +233,11 @@ class ItemController extends Controller
     public function vistaQR($id)
     {
         $item = Item::find($id);
-        return view('layouts.showqr')->with('item', $item);
+        if ($item == null) {
+            return redirect('/');
+        } else { 
+            return view('layouts.showqr')->with('item', $item);
+        }
     }
 
     public function printQR(Request $request)

@@ -13,6 +13,7 @@ class EstadoSeeders extends Seeder
     public function run()
     {
         Estado::create(['estado' =>'Nuevo']);
+        Estado::create(['estado' =>'Regular']);
         Estado::create(['estado' =>'Viejo']);
     }
 }

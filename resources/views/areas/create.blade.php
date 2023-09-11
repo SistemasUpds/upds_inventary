@@ -37,6 +37,15 @@
                     @endif
                 </div>
                 <div class="col-12">
+                    <label for="sigla" class="form-label"> Sigla del Area</label>
+                    <input type="text" class="form-control" name="sigla" value="{{ old('sigla') }}" id="sigla" onkeypress="mayus(this);">
+                    @if ($errors->has('sigla'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('sigla') }}</strong>
+                        </span>
+                    @endif
+                </div>
+                <div class="col-12">
                     <label for="encargado" class="form-label"> Encargado/a</label>
                     <input type="text" class="form-control" name="encargado" value="{{ old('encargado') }}" id="encargado">
                     @if ($errors->has('encargado'))
@@ -64,4 +73,9 @@
         </div>
       </div>
   </section>
+  <script>
+    function mayus(e) {
+        e.value = e.value.toUpperCase();
+    }
+  </script>
 @endsection

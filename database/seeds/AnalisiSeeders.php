@@ -14,9 +14,9 @@ class AnalisiSeeders extends Seeder
     {
         Analisis::create(['centro_analisis' =>'Rectorado Regional']);
         Analisis::create(['centro_analisis' =>'Vicerrectorado']);
-        Analisis::create(['centro_analisis' =>'Administración']);
-        Analisis::create(['centro_analisis' =>'Secretaria general']);
-        Analisis::create(['centro_analisis' =>'Comercial Peragrado']);
+        Analisis::create(['centro_analisis' =>'Dirección Administrativa']);
+        Analisis::create(['centro_analisis' =>'Secretaria General']);
+        Analisis::create(['centro_analisis' =>'Comercial Pregrado']);
         Analisis::create(['centro_analisis' =>'Comercial Postgrado']);
     }
 }

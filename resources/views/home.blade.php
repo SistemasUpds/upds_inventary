@@ -21,6 +21,15 @@
                 </button>
             </div>
           @endif
+          <br>
+          <a class="btn btn-outline-primary" href="{{ url('admin/area/create')}}">
+            <i class="bi bi-collection"> Nueva Area</i>
+          </a>
+          <a class="btn btn-outline-dark" href="{{ isset($area->id) ? url('admin/item/create/'.$area->id) : url('admin/item/create/0') }}">
+            <i class="bi bi-collection"> Activo</i>
+          </a>
+          <br>
+          <br>
           @if( count($areas) > 0 )
           <div class="row">
             <section class="section dashboard">
@@ -78,12 +87,6 @@
         @else
           <p class="flow-text">Actualmente no tienes ninguna Area registrado. ¡Haga clic en el botón para agregar algunos!</p>
         @endif
-        <a class="btn btn-outline-primary" href="{{ url('admin/area/create')}}">
-          <i class="bi bi-collection"> Nueva Area</i>
-        </a>
-        <a class="btn btn-outline-dark" href="{{ isset($area->id) ? url('admin/item/create/'.$area->id) : url('admin/item/create/0') }}">
-          <i class="bi bi-collection"> Activo</i>
-        </a>
       </div>
   </div>
 @endsection
