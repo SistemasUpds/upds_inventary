@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-md-6" id="graficoBarras" style="margin-left: auto; margin-right: auto;">
                   <br>
-                  <div style="text-align: center">
+                  <div style="text-align: center">                    
                     <img src="data:image/png;base64,{{ base64_encode($qrImage) }}" alt="QR Code">
                   </div>
                   <p style="text-align: center">{{$item->codigo}}</p>
@@ -54,6 +54,7 @@
           <br>
           <!-- End Card with header and footer -->
       </div>
+
 
       <form id="image-form" method="post" action="{{ url('admin/printQR/') }}" enctype="multipart/form-data" style="display:none;">
         {{ csrf_field() }}

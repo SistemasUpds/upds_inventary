@@ -43,27 +43,30 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-10">
-                  <section class="section">
-                    <div class="col-lg-6" style="margin: 0 auto;"><!-- Card with header and footer -->
-                      <div class="card">
-                        <div class="card-header" style="text-align: center">{{$item->nombre}}</div>
-                        <div class="card-body">
-                          <div class="row">
-                              <div class="col-md-6">
-                                  <img src="{{ asset('img/fotos/'.$item->image) }}" alt="Foto" width="250" height="200">
-                              </div>
-                              <div class="col-md-6">
-                                  <h5 class="card-title">Area: {{$item->area->nombre}}</h5>
-                                  <h6><b>Encargado:</b> {{$item->area->encargado}}</h6>
-                                  <p><b>Cod.</b>{{$item->codigo}}</p>
-                                  <p>{{$item->descripcion}}</p>
-                              </div>
-                          </div>
+                    <section class="section">
+                        <div class="card">
+                            <div class="card-header" style="text-align: center"><b>Activo: </b>{{$item->activo->activo}}</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img src="{{ asset('img/fotos/'.$item->image) }}" alt="Foto" width="350" height="300">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5 class="card-title">Area: {{$item->area->nombre}}</h5>
+                                        <h6><b>Tipo de Activo:</b> {{$item->tipo->nombre}}</h6>
+                                        <h6><b>Encargado:</b> {{$item->area->encargado}}</h6>
+                                        <p><b>{{$item->codigo}}</b></p>
+                                        <h6><b>Fecha compra:</b> {{$item->fecha_compra}}</h6>
+                                        <h6><b>Estado:</b> {{$item->Estado->estado}}</h6>
+                                        <h6><b>Centro Analisis:</b> {{$item->centro->centro_analisis}}</h6>
+                                        <p>{{$item->descripcion}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <!-- End Card with header and footer -->
                         </div>
-                        <br>
-                          <!-- End Card with header and footer -->
-                    </div>
-                  </section>
+                    </section>
                 </div>
             </div>
         </div>

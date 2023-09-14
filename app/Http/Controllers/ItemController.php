@@ -51,7 +51,7 @@ class ItemController extends Controller
             'id_tipo' => 'required',
             'id_estado' => 'required',
             'fecha' => 'required',
-            'id_centro' => 'required'
+            'id_centro' => 'required',
         ]);
         $imageData = $request->input('image_data');
         $area = Area::find($request->id_area);
