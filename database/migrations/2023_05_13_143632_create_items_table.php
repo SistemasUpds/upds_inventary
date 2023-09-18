@@ -19,16 +19,18 @@ class CreateItemsTable extends Migration
             $table->unsignedBigInteger('centro_id')->nullable();
             $table->unsignedBigInteger('obserb_id')->nullable();
             $table->unsignedBigInteger('estado_id')->nullable();
-            $table->string('novus', 200);
+            $table->string('novus', 200)->nullable();
             $table->integer('estado')->default(1);
-            $table->text('razon')->nullable();
             $table->string('image')->nullable();
             $table->String('qr_code')->nullable();
+            $table->string('modelo')->nullable();
+            $table->String('serie')->nullable();
             $table->String('codigo', 50);
             $table->text('descripcion', 50)->nullable();
             $table->date('fecha_compra');
             $table->dateTime('fecha_baja')->nullable();
             $table->string('user_baja')->nullable();
+            $table->text('razon')->nullable();
             $table->timestamps();
         });
     }
@@ -41,64 +43,3 @@ class CreateItemsTable extends Migration
         Schema::dropIfExists('items');
     }
 };
-
-/*
-ahora quiero sacar de este nombre $coll->nombre = $request->nombre INSTITUCION
- UNIDAD
- RECTORADO, 
- SECRETARÍA RECTORADO
- DIRECCION ADMINISTRATIVO FINANCIERA,
- CONTABILIDAD PRUEBA,
- CONTABILIDAD FISCAL,
- CAJAS,
- JEFATURA COMERCIAL,
- SISTEMAS,
- VICERRECTORADO ACADEMICO,
- SECRETARIA VICERRECTORADO,
- REGISTROS,
- EXTENSION UNIVERSITARIA,
- BIBLIOTECA,
- COORDINADOR ADMINISTRACION DE EMPRESAS,
- COORDINADOR INGENIERIA COMERCIAL,
- COORDINADOR CONTADURIA PUBLICA,
- COORDINADOR PSICOLOGIA - PSICOPEDAGOGIA,
- COORDINADOR INGENIERIA CIVIL - SISTEMAS,
- COORDINADOR DERECHO,
- ASESORIA PEDAGOGICA,
- INVESTIGACION,
- LABORATORIO DE CIVIL,
- LABORATORIO DE SISTEMAS,
- DATA CENTER,
- GABINETE PSICOPEDAGOGICO,
- POST GRADO,
- PLANIFICACION Y DESARROLLO INSTITUCIONAL,
- GESTION TALENTO HUMANO
- CODIGO 
- RE 
- SG
- DAF
- CP
- CF
- CJ
- JC
- S
- VA
- SV
- RG
- EU
- BI
- FCE
- FIC
- CCP
- CPP
- CD
- AP
- INV
- LC
- LS
- DC
- GP
- PG
- PDI
- GT
- */

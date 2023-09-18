@@ -12,8 +12,9 @@ class EstadoSeeders extends Seeder
      */
     public function run()
     {
-        Estado::create(['estado' =>'Nuevo']);
+        Estado::create(['estado' =>'Optimo']);
+        Estado::create(['estado' =>'Bueno']);
         Estado::create(['estado' =>'Regular']);
-        Estado::create(['estado' =>'Viejo']);
+        Estado::create(['estado' =>'Baja']);
     }
 }

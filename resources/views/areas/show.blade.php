@@ -11,6 +11,12 @@
     }
 </style>
 
+@if ($area->encargado === null)
+    <div class=" alert alert-danger alert-dismissible fade show">
+        <span class="alert-text text-black">Porfavor agregar al encargado del area</span> <a href="{{ url('admin/area/'.$area->id.'/edit')}}">Ir a</a>
+    </div>
+@endif
+
 <section class="section">
     <div class="col-lg-6" style="margin: 0 auto;">
         <!-- Card with header and footer -->
@@ -110,6 +116,7 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" ></script>
 
 <script>
+
     document.getElementById('categoria-filtro').addEventListener('change', function () {
         filtrarTabla();
     });

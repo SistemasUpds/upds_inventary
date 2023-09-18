@@ -1,6 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+  /* Estilo para los párrafos */
+  p {
+    color: black;
+    margin: 0; /* Elimina el margen vertical predeterminado */
+    padding: 0; /* Elimina el espacio interno predeterminado */
+    line-height: 2; /* Establece la altura de línea deseada */
+  }
+</style>
 <section class="section">
       <div class="col-lg-6" style="margin: 0 auto;"><!-- Card with header and footer -->
         <div class="card">
@@ -20,14 +29,19 @@
                 <div class="col-md-12s">
                   <p><b>Descripción:</b> {{$item->descripcion}}</p>
                 </div>
-                <div class="col-md-6" id="graficoBarras" style="margin-left: auto; margin-right: auto;">
-                  <br>
-                  <div style="text-align: center">                    
-                    <img src="data:image/png;base64,{{ base64_encode($qrImage) }}" alt="QR Code">
+                <div class="row" id="graficoBarras" style="margin-left: auto; margin-right: auto;">
+                  <div class="col-md-2" style="margin-left: auto; margin-right: 5%;">
+                    <div style="text-align: center">                    
+                      <img src="data:image/png;base64,{{ base64_encode($qrImage) }}" alt="QR Code" width="160" height="160">
+                    </div>
                   </div>
-                  <p style="text-align: center">{{$item->codigo}}</p>
-                  <br>
-                  <br>
+                  <div class="col-md-6" style="margin-left: auto; margin-right: 5%;">
+                    <p style="text-align: center; color:black"><b>{{$item->codigo}}</b></p>
+                    <p><b>{{$item->activo->activo}}</b></p>
+                    <p>{{$item->tipo->nombre}}</p>
+                    <p>{{$item->area->nombre}}</p>
+                    <p>SEDE POTOSÍ {{date('Y')}}</p>
+                  </div>
                 </div>
             </div>
           </div>

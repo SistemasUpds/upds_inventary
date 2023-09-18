@@ -71,14 +71,14 @@ class ItemController extends Controller
         $siglaActivo = strtoupper(substr($nombreActivo->activo, 0, 3));
 
         //$elementosEnArea = Item::where('area_id', $area->id)->count();
-        $elementosDeActivo = Item::where('area_id', $area->id)->where('activo_id', $request->nombre)->count();
-        if ($elementosDeActivo == 0) {
+        //$elementosDeActivo = Item::where('area_id', $area->id)->where('activo_id', $request->nombre)->count();
+        /*if ($elementosDeActivo == 0) {
             $num = 1; // Si no hay elementos en el área para el activo, comenzamos en 1.
         } else {
             $num = $elementosDeActivo + 1; // Si hay elementos, incrementamos en 1.
-        }
+        }*/
         // Suponiendo que tengas acceso a $tipo y $siglaActivo desde algún lugar.
-        $coll->codigo = 'UPDS-' . $tipo->sigla . '-' . $siglaActivo . '-' . $request->novus . '-' . $num . '-' . $area->sigla;
+        $coll->codigo = $area->sigla. '.' .$tipo->codigo . '.' . $siglaActivo . '.' . $request->novus;
         //dd($coll->codigo );
 
         //save image file
