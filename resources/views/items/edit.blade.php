@@ -58,16 +58,6 @@
                         @endif
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="novus" id="novus" value="{{ old('novus', $item->novus) }}">
-                        <label for="novus">Codigo activo - Sistema Novus</label>
-                            @if ($errors->has('novus'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('novus') }}</strong>
-                                </span>
-                            @endif
-                    </div>
-                    
-                    <div class="form-floating mb-3">
                         <input type="date" class="form-control" name="fecha_compra" value="{{ old('fecha_compra', $item->fecha_compra) }}" id="fecha_compra">
                         <label for="fecha_compra">Fecha de compra</label>
                         @if ($errors->has('fecha'))

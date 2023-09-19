@@ -139,7 +139,7 @@ class AreaController extends Controller
 
         foreach ($datosFiltrados as $row) {
             $codigo = str_replace('"', '', $row->codigo);
-            $activo = str_replace('"', '', $row->nombre);
+            $activo = str_replace('"', '', $row->activo->activo);
             $tipoActivo = '';
             if ($row->tipo) {
                 $tipoActivo = str_replace('"', '', $row->tipo->nombre);

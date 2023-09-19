@@ -62,24 +62,19 @@ class ItemController extends Controller
         $coll->area_id = $request->id_area;
         $coll->tipo_id = $request->id_tipo;
         $coll->estado_id = $request->id_estado;
-        $coll->novus = $request->novus;
         $coll->centro_id = $request->id_centro;
         $coll->fecha_compra = $request->fecha;
         //Codigo UPDS
         $tipo = Tipo::find($request->id_tipo);
         $nombreActivo = Activo::find($request->nombre);
         $siglaActivo = strtoupper(substr($nombreActivo->activo, 0, 3));
-
-        //$elementosEnArea = Item::where('area_id', $area->id)->count();
-        //$elementosDeActivo = Item::where('area_id', $area->id)->where('activo_id', $request->nombre)->count();
-        /*if ($elementosDeActivo == 0) {
+        $elementosDeActivo = Item::where('area_id', $area->id)->where('activo_id', $request->nombre)->count();
+        if ($elementosDeActivo == 0) {
             $num = 1; // Si no hay elementos en el área para el activo, comenzamos en 1.
         } else {
             $num = $elementosDeActivo + 1; // Si hay elementos, incrementamos en 1.
-        }*/
-        // Suponiendo que tengas acceso a $tipo y $siglaActivo desde algún lugar.
-        $coll->codigo = $area->sigla. '.' .$tipo->codigo . '.' . $siglaActivo . '.' . $request->novus;
-        //dd($coll->codigo );
+        }
+        $coll->codigo = $area->sigla. '.' .$tipo->codigo . '.' . $siglaActivo . '.' . sprintf('%05d', $num);
 
         //save image file
         if ($imageData) {
@@ -115,7 +110,6 @@ class ItemController extends Controller
     public function show($id)
     {
         $item = Item::find($id);
-
         // Generar el código QR y obtener su contenido en formato PNG
         ob_start();  // Capturar la salida
         QRcode::png(url('vistaQR/' . $item->id));
@@ -167,13 +161,14 @@ class ItemController extends Controller
             $tipo = Tipo::find($request->id_tipo);
             $nombreActivo = Activo::find($request->nombre);
             $siglaActivo = strtoupper(substr($nombreActivo->activo, 0, 3));
-            $elementosEnArea = Item::where('area_id', $area->id)->count();
-            //$elementosDeTipo = Item::find($request->id_tipo);
-            $elementosDeActivo = Activo::where('id', $request->nombre)->count();
             // Calcular el valor de $num como el máximo entre $elementosEnArea y $elementosDeTipo
-            $num = max($elementosEnArea, $elementosDeActivo) + 1; 
-            // Suponiendo que tengas acceso a $tipo y $siglaActivo desde algún lugar.
-            $item->codigo = 'UPDS-' . $tipo->sigla . '-' . $siglaActivo . '-' . $request->novus . '-' . $num . '-' . $area->sigla;
+            $elementosDeActivo = Item::where('area_id', $area->id)->where('activo_id', $request->nombre)->count();
+            if ($elementosDeActivo == 0) {
+                $num = 1; // Si no hay elementos en el área para el activo, comenzamos en 1.
+            } else {
+                $num = $elementosDeActivo + 1; // Si hay elementos, incrementamos en 1.
+            }
+            $item->codigo = $area->sigla. '.' .$tipo->codigo . '.' . $siglaActivo . '.' . sprintf('%05d', $num);
         }
         $item->area_id = $request->id_area;
         $item->tipo_id = $request->id_tipo;

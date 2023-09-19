@@ -67,21 +67,18 @@ class AreasSeeders extends Seeder
         Area::create(['nombre' =>'CONTABILIDAD PRUEBA', 'sigla' => '52']);
         Area::create(['nombre' =>'CONTABILIDAD FISCAL' , 'sigla' => '53']);
         Area::create(['nombre' =>'JEFATURA COMERCIAL' , 'sigla' => '54']);
-        Area::create(['nombre' =>'SISTEMAS' , 'sigla' => '55']);
-        Area::create(['nombre' =>'SECRETARIA VICERRECTORADO' , 'sigla' => '56']);
-        Area::create(['nombre' =>'REGISTROS' , 'sigla' => '57']);
-        Area::create(['nombre' =>'COORDINADOR INGENIERIA CIVIL - SISTEMAS' , 'sigla' => '58']);
-        Area::create(['nombre' =>'ASESORIA PEDAGOGICA' , 'sigla' => '59']);
-        Area::create(['nombre' =>'INVESTIGACION' , 'sigla' => '60']);
-        Area::create(['nombre' =>'LABORATORIO DE CIVIL' , 'sigla' => '61']);
-        Area::create(['nombre' =>'LABORATORIO DE SISTEMAS' , 'sigla' => '62']);
-        Area::create(['nombre' =>'DATA CENTER' , 'sigla' => '63']);
-        Area::create(['nombre' =>'GABINETE PSICOPEDAGOGICO' , 'sigla' => '64']);
-        Area::create(['nombre' =>'PLANIFICACION Y DESARROLLO INSTITUCIONAL' , 'sigla' => '65']);
-        Area::create(['nombre' =>'AULAS' , 'sigla' => '66']);
-        Area::create(['nombre' =>'AUDITORIUM' , 'sigla' => '67']);
-        Area::create(['nombre' =>'PORTERIA Y SEGURIDAD' , 'sigla' => '68']);
-        Area::create(['nombre' =>'PASILLOS' , 'sigla' => '69']);
-        Area::create(['nombre' =>'CAFETERIA' , 'sigla' => '70']);
+        Area::create(['nombre' =>'SECRETARIA VICERRECTORADO' , 'sigla' => '55']);
+        Area::create(['nombre' =>'INGENIERIA CIVIL' , 'sigla' => '56']);
+        Area::create(['nombre' =>'ASESORIA PEDAGOGICA' , 'sigla' => '57']);
+        Area::create(['nombre' =>'LABORATORIO DE CIVIL' , 'sigla' => '58']);
+        Area::create(['nombre' =>'LABORATORIO DE SISTEMAS' , 'sigla' => '59']);
+        Area::create(['nombre' =>'DATA CENTER' , 'sigla' => '60']);
+        Area::create(['nombre' =>'GABINETE PSICOPEDAGOGICO' , 'sigla' => '61']);
+        Area::create(['nombre' =>'PLANIFICACION Y DESARROLLO INSTITUCIONAL' , 'sigla' => '62']);
+        Area::create(['nombre' =>'AULAS' , 'sigla' => '63']);
+        Area::create(['nombre' =>'AUDITORIUM' , 'sigla' => '64']);
+        Area::create(['nombre' =>'PORTERIA Y SEGURIDAD' , 'sigla' => '65']);
+        Area::create(['nombre' =>'PASILLOS' , 'sigla' => '66']);
+        Area::create(['nombre' =>'CAFETERIA' , 'sigla' => '67']);
     }
 }

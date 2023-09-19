@@ -78,16 +78,6 @@
                                 </span>
                             @endif
                         </div>
-                        <!--input type="text" class="form-control" name="nombre" value="{{ old('nombre') }}" id="nombre"-->
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" name="novus" id="novus">
-                            <label for="novus">Codigo activo - Sistema Novus</label>
-                            @if ($errors->has('novus'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('novus') }}</strong>
-                                </span>
-                            @endif
-                        </div>
                         
                         <div class="form-floating mb-3">
                             <input type="date" class="form-control" name="fecha" value="{{ old('fecha') }}" id="fecha">
