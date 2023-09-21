@@ -46,7 +46,14 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function 
     Route::get('/obtener-activos-por-tipo/{tipoId}', 'ItemController@obtenerActivosPorTipo');
     Route::get('/activo/create', 'AreaController@createActivo');
     Route::post('/activo',['uses' => 'AreaController@storeActivo']);
-
+    
+    Route::get('/material/create/{id}', ['uses' => 'ItemController@otroMaterial']);
+    Route::post('/material/create', ['uses' => 'ItemController@storeMaterial']);
+    
+    Route::get('/otro/material{id}/edit', ['uses' => 'ItemController@editMaterial']);
+    Route::post('/otro/material{id}', ['uses' => 'ItemController@updateMaterial']);
+    Route::get('/otro/material{id}/show', ['uses' => 'ItemController@showMaterial']);
+    Route::get('/otro/material/descargar{id}', ['uses' => 'ItemController@descargarMaterial']);
 });
 
 Route::get('/vistaQR/{id}', ['uses' => 'ItemController@vistaQR']);

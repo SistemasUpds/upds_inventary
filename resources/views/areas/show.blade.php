@@ -27,17 +27,21 @@
                 {{$area->descripcion}}
             </div>
             <br>
-            <a class="btn btn-outline-dark" href="{{ isset($area->id) ? url('admin/item/create/'.$area->id) : url('admin/item/create/'.'0') }}">
-                <i class="bi bi-collection"> Agregar Activo</i>
-            </a>
-            <!-- End Card with header and footer -->
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <a class="btn btn-outline-dark" href="{{ isset($area->id) ? url('admin/item/create/'.$area->id) : url('admin/item/create/'.'0') }}">
+                    <i class="bi bi-collection"> Agregar Activo</i>
+                </a>
+                <a class="btn btn-outline-dark" href="{{ url('admin/material/create/'.$area->id) }}" style="margin-left: 20px;">
+                    <i class="bi bi-collection"> Otro Material</i>
+                </a>
+            </div>
+        </div>
     </div>
 </section>
 
 <section class="section dashboard">
-    <!-- Recent Sales -->
-    <div class="col-12">
-        <div class="card recent-sales">
+    <div class="card">
+        <div class="card-body">
             <div class="filter">
                 <form action="{{ url('admin/generar-pdf') }}" method="GET">
                     {{ csrf_field() }}
@@ -45,13 +49,13 @@
                     <div class="input-group mb-2">
                         <select class="form-control" id="categoria-filtro" name="id_tipo" aria-label="Tipo de activo">
                             <option value="" selected disabled>Selecciona el Tipo</option>
-                                @if( count($tipo) > 0 )
-                                    <option value="00">Todo...</option>
-                                        @foreach( $tipo as $collection )
-                                            <option value="{{$collection->id}}">{{$collection->nombre}}</option>
-                                        @endforeach
-                                @endif
-                            </select>
+                            @if( count($tipo) > 0 )
+                                <option value="00">Todo...</option>
+                                    @foreach( $tipo as $collection )
+                                        <option value="{{ $collection->id }}">{{ $collection->nombre }}</option>
+                                    @endforeach
+                            @endif
+                        </select>
                         @if ($user->permiso->exportar == 1)
                             <span class="input-group-text">
                                 <input class="btn btn-light" type="submit" value="Exportar">
@@ -60,9 +64,18 @@
                     </div>
                 </form>
             </div>
-        <br>
-            <div class="card-body scrollable-table">
-                <h5 class="card-title">Activos del Area <span>| {{$area->nombre}}</span></h5>
+        <h5 class="card-title">Activos del Area <span>| {{$area->nombre}}</span></h5>
+          <!-- Bordered Tabs -->
+          <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#bordered-home" type="button" role="tab" aria-controls="home" aria-selected="true">Activos</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Otro Material</button>
+            </li>
+          </ul>
+          <div class="tab-content pt-2 scrollable-table" id="borderedTabContent">
+            <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
                 @if( count($area->items) > 0 )
                     <table id="tabla-items" class="table table-borderless datatable">
                         <thead>
@@ -105,8 +118,40 @@
                     <p class="center-align">No hay elementos para mostrar. ¡Vamos a agregar algunos!</p>
                 @endif
             </div>
+            <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
+                @if( $cantidad > 0 )
+                    <table id="tabla-items" class="table table-borderless datatable">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Descripción</th>
+                                <th scope="col">Ver</th>
+                                <th scope="col">Editar</th>
+                            </tr>
+                        </thead>
+                        @foreach($otro as $item)
+                            <tbody>
+                                <tr>
+                                    <td>{{$item->id}}</td>
+                                    <td scope="row">{{$item->nombre}}</td>
+                                    <td style="display: none">{{$item->area_id}}</td>
+                                    <td>{{ strlen($item->descripcion) > 25 ? substr($item->descripcion, 0, 25) . '...' : $item->descripcion }}</td>
+                                    <td><a href="{{ url('admin/otro/material'.$item->id.'/show') }}"><i class="fa fa-eye"></i></a></td>
+                                    <td><a href="{{ url('admin/otro/material'.$item->id.'/edit') }}"><i class="fa fa-edit"></i></a></td>
+                                </tr>
+                            </tbody>
+                        @endforeach
+                    </table>
+                    <a href="{{ url('admin/otro/material/descargar'.$area->id) }}">Descargar</a>
+                @else
+                    <div class="divider"></div>
+                    <p class="center-align">No hay elementos para mostrar.</p>
+                @endif
+            </div>
+          </div><!-- End Bordered Tabs -->
         </div>
-    </div>
+      </div>
     <!-- End Recent Sales -->
     <a class="badge bg-primary" href="{{url('/')}}"><i class="fa fa-check"></i> Volver</a>
 </section>
@@ -116,11 +161,9 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" ></script>
 
 <script>
-
     document.getElementById('categoria-filtro').addEventListener('change', function () {
         filtrarTabla();
     });
-
     function filtrarTabla() {
         var categoriaSeleccionada = document.getElementById('categoria-filtro').value;
         var tablaItems = document.getElementById('tabla-items');
@@ -132,7 +175,6 @@
                 filas[i].style.display = ''; // Mostrar la fila si la categoría coincide o no se ha seleccionado ninguna categoría
             } else {
                 filas[i].style.display = 'none'; // Ocultar la fila si la categoría no coincide
-                console.log('hola');
             }
         }
     }

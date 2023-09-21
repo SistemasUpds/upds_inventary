@@ -78,15 +78,38 @@
                                 </span>
                             @endif
                         </div>
-                        
                         <div class="form-floating mb-3">
-                            <input type="date" class="form-control" name="fecha" value="{{ old('fecha') }}" id="fecha">
+                            <input type="date" class="form-control" name="fecha" value="{{ old('fecha') }}" id="fecha" max="{{ date('Y-m-d') }}">
                             <label for="fecha">Fecha de compra</label>
                             @if ($errors->has('fecha'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('fecha') }}</strong>
                                 </span>
                             @endif
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" name="modelo" value="{{ old('modelo') }}" id="modelo">
+                                    <label for="modelo">Modelo</label>
+                                    @if ($errors->has('modelo'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('modelo') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" name="serie" value="{{ old('serie') }}" id="serie">
+                                    <label for="serie">Serie</label>
+                                    @if ($errors->has('serie'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('serie') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
                         <div class="form-floating mb-3">
                             <select class="form-select" id="id_estado" name="id_estado" aria-label="Esatdo del activo">

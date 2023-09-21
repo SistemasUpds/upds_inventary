@@ -26,7 +26,7 @@ class CreateItemsTable extends Migration
             $table->string('modelo')->nullable();
             $table->String('serie')->nullable();
             $table->String('codigo', 50);
-            $table->text('descripcion', 50)->nullable();
+            $table->text('descripcion', 250)->nullable();
             $table->date('fecha_compra');
             $table->dateTime('fecha_baja')->nullable();
             $table->string('user_baja')->nullable();

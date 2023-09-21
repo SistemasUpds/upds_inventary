@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Area;
 use App\Item;
 use App\Observacion;
+use App\OtroMaterial;
 use App\Tipo;
 use App\User;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -58,7 +59,9 @@ class AreaController extends Controller
         $tipo = Tipo::all();
         $area = Area::find($id);
         $obser = Observacion::all();
-        return view('areas.show')->with('area', $area)->with('tipo', $tipo)->with('user', $user)->with('obser', $obser);
+        $otro = OtroMaterial::where('area_id', $id)->get();
+        $cantidad = count($otro);
+        return view('areas.show', compact('otro', 'area', 'tipo', 'user', 'obser', 'cantidad'));
     }
 
     public function edit($id)

@@ -9,6 +9,7 @@ use App\Estado;
 use App\Item;
 use App\MoveHistory;
 use App\Observacion;
+use App\OtroMaterial;
 use App\Tipo;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,6 +18,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 //use Endroid\QrCode\QrCode;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Svg\Tag\Rect;
+
 require_once(public_path('phpqrcode/qrlib.php'));
 
 
@@ -63,6 +66,8 @@ class ItemController extends Controller
         $coll->tipo_id = $request->id_tipo;
         $coll->estado_id = $request->id_estado;
         $coll->centro_id = $request->id_centro;
+        $coll->modelo = $request->modelo;
+        $coll->serie = $request->serie;
         $coll->fecha_compra = $request->fecha;
         //Codigo UPDS
         $tipo = Tipo::find($request->id_tipo);
@@ -104,7 +109,7 @@ class ItemController extends Controller
         }
         $coll->save();
         // Redirect
-        return redirect('/')->with('success', 'Mueble registrado exitosamente');
+        return redirect('/')->with('success', 'Activo registrado exitosamente');
     }
 
     public function show($id)
@@ -150,6 +155,8 @@ class ItemController extends Controller
         $item->descripcion = $request->descripcion;
         $item->estado_id = $request->id_estado;
         $item->centro_id = $request->id_centro;
+        $item->modelo = $request->modelo;
+        $item->serie = $request->serie;
         if ($item->area_id != $request->id_area) {
             $nomArea = Area::find($request->id_area);
             $movi = new MoveHistory();
@@ -197,7 +204,7 @@ class ItemController extends Controller
         QRcode::png(url('vistaQR/' . $item->id));
         $qrImage = ob_get_clean();  // Obtener la salida capturada
         
-        return view('items.show')->with('success', 'Mueble actualizado correctamente.')->with('item', $item)->with('qrImage', $qrImage);
+        return view('items.show')->with('success', 'Activo actualizado correctamente.')->with('item', $item)->with('qrImage', $qrImage);
     }
 
     public function destroy(Request $request, $id)
@@ -313,4 +320,106 @@ class ItemController extends Controller
         return response()->json($activos);
     }
 
+    public function otroMaterial($id) {
+        $area = Area::find($id);
+        return view('items.otro_material', compact('area'));
+    }
+
+    public function storeMaterial(Request $request) {
+        // Validate
+        $this->validate($request, [
+            'nombre' => 'required',
+            'descripcion' => 'required',
+            'id_area' => 'required',
+        ]);
+        $imageData = $request->input('image_data');
+        $coll = new OtroMaterial();
+        $coll->nombre = $request->nombre;
+        $coll->descripcion = $request->descripcion;
+        $coll->area_id = $request->id_area;
+        if ($imageData) {
+            $imagenBase64 = $request->input('image_data');
+            $imagenCodificadaLimpia = str_replace("data:image/png;base64,", "", urldecode($imagenBase64));
+            $nombreImagen = 'camara_' . uniqid() . '.png';
+            $rutaImagen = public_path('/img/otros/' . $nombreImagen);
+            $imagenDecodificada = base64_decode($imagenCodificadaLimpia);
+            $moved = file_put_contents($rutaImagen, $imagenDecodificada);
+            if ($moved) {
+                $coll->image = $nombreImagen;
+                $coll->save();
+            }
+        } else {
+            $file = $request->file('image');
+            $path = public_path() . '/img/otros';
+            $fileName = uniqid() . '-' . $file->getClientOriginalName();
+            $moved = $file->move($path, $fileName);
+            if ($moved) {
+                $coll->image = $fileName;
+                $coll->save();
+            }
+        }
+        $coll->save();
+        return redirect('/')->with('success', 'Material registrado exitosamente');
+    }
+
+    public function showMaterial($id) {
+        $otro = OtroMaterial::find($id);
+        return view('otros_materiales.show', compact('otro'));
+    }
+    
+    public function editMaterial($id) {
+        $material = OtroMaterial::find($id);
+        return view('otros_materiales.edit', compact('material'));
+    }
+
+    public function updateMaterial(Request $request, $id) {
+        // Validate
+        $this->validate($request, [
+            'nombre' => 'required',
+            'descripcion' => 'required',
+            'id_area' => 'required',
+        ]);
+        // Update
+        $item = OtroMaterial::find($id);
+        $item->nombre = $request->nombre;
+        $item->descripcion = $request->descripcion;
+        $item->area_id = $request->id_area;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $path = public_path() . '/img/otros';
+            $fileName = uniqid() . '-' . $file->getClientOriginalName();
+            $moved = $file->move($path, $fileName);
+            if ($moved) {
+                $previousPath = $path . '/' . $item->image;
+                $item->image = $fileName;
+                $saved = $item->save();
+                if ($saved)
+                    File::delete($previousPath);
+            }
+        }
+        $item->save();
+        return view('otros_materiales/show')->with('success', 'Activo actualizado correctamente.')->with('otro', $item);
+    }
+
+    public function descargarMaterial($id)
+    {
+        $material = OtroMaterial::where('area_id', $id)->get();
+        $csvContent = "Num;Nombre;Descripcion;Area\n";
+        $contador = 1;
+
+        foreach ($material as $row) {
+            $nombre = str_replace('"', '', $row->nombre);
+            $descripcion = str_replace('"', '', $row->descripcion);
+            $area = str_replace('"', '', $row->area->nombre);
+            $csvContent .= "$contador;$nombre;$descripcion;$area\n";
+            $contador++;
+        }
+
+        // Descarga el archivo CSV
+        $fileName = 'otros_materiales.csv';
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename=' . $fileName);
+        echo $csvContent;
+        exit;
+    }
 }
