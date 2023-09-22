@@ -126,7 +126,7 @@ class AreaController extends Controller
 
     public function generarPDF(Request $request)
     {
-        $area = Area::find($request->area);
+        //$area = Area::find($request->area);
         if ($request->input('id_tipo') == '00') {
             $datosFiltrados = Item::where('area_id', $request->area)->get();
         } elseif ($request->has('id_tipo')) {
@@ -137,38 +137,44 @@ class AreaController extends Controller
         }
 
         // Construir el contenido del archivo CSV
-        $csvContent = "Num;Codigo;Activo;Tipo de activo;Centro de Analisis;Fecha de compra;Descripcion;Fecha de baja;Estado;Observacion\n";
-        $contador = 1;
-
+        $csvContent = "CODIGO;FECHA ALTA;NOMBRE;DETALLE;MODELO;SERIE;CATEGORIA;ESTADO DEL ACTIVO FIJO;RESPONSABLE;UBICACIÓN;CENTRO DE ANALISIS\n";
         foreach ($datosFiltrados as $row) {
-            $codigo = str_replace('"', '', $row->codigo);
-            $activo = str_replace('"', '', $row->activo->activo);
+            // Escapar caracteres especiales en los valores de cada columna
+            $codigo = str_replace('"', '""', $row->codigo);
+            $activo = str_replace('"', '""', $row->activo->activo);
+            //$modelo = str_replace('"', '""', $row->modelo);
+            $serie = str_replace('"', '""', $row->serie);
+            $area = str_replace('"', '""', $row->area->nombre);
+            $responsable = str_replace('"', '""', $row->area->encargado);
             $tipoActivo = '';
             if ($row->tipo) {
-                $tipoActivo = str_replace('"', '', $row->tipo->nombre);
+                $tipoActivo = str_replace('"', '""', $row->tipo->nombre);
             }
             $centro = '';
             if ($row->centro) {
-                $centro = str_replace('"', '', $row->centro->centro_analisis);
+                $centro = str_replace('"', '""', $row->centro->centro_analisis);
             }
-            $fechaCompra = str_replace('"', '', Carbon::parse($row->fecha_compra)->format('d/m/Y'));
-            $descripcion = str_replace('"', '', $row->descripcion);
-            $fechaBaja = '';
-            if ($row->fecha_baja) {
-                $fechaBaja = str_replace('"', '', $row->fecha_baja);
+            $fechaCompra = str_replace('"', '""', Carbon::parse($row->fecha_compra)->format('d/m/Y'));
+            // Reemplaza los saltos de línea por espacios en blanco en $descripcion
+            $descripcion = str_replace(["\r", "\n"], ' ', $row->descripcion);
+            $modelo = '';
+            if ($row->modelo) {
+                $modelo = str_replace('"', '""', $row->modelo);
             }
-            $estado = ($row->estado != 0) ? 'Activo' : 'Inactivo';
+            $estado = str_replace('"', '""', $row->Estado->estado);
             $observacion = '';
             if ($row->observacion) {
-                $observacion = str_replace('"', '', $row->observacion->observacion);
+                $observacion = str_replace('"', '""', $row->observacion->observacion);
             }
-            $csvContent .= "$contador;$codigo;$activo;$tipoActivo;$centro;$fechaCompra;$descripcion;$fechaBaja;$estado;$observacion\n";
-            $contador++;
+            // Construir la línea de datos del archivo CSV
+            $linea = "$codigo;$fechaCompra;$activo;$descripcion;$modelo;$serie;$tipoActivo;$estado;$responsable;$area;$centro\n";
+            // Agregar la línea al contenido del archivo CSV
+            $csvContent .= $linea;
         }
-
-        // Descarga el archivo CSV
+        // Descargar el archivo CSV
         $fileName = 'archivo.csv';
-        header('Content-Type: text/csv');
+        
+        header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=' . $fileName);
         echo $csvContent;
         exit;

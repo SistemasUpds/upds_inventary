@@ -74,10 +74,14 @@
               <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#bordered-profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Otro Material</button>
             </li>
           </ul>
+
+          <button id="export">Export Now</button>
+
           <div class="tab-content pt-2 scrollable-table" id="borderedTabContent">
             <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
                 @if( count($area->items) > 0 )
-                    <table id="tabla-items" class="table table-borderless datatable">
+                    <table class="table table-borderless datatable" id="tableData" border="1" cellpadding="5" cellspacing="0">
+                        <!--id="tabla-items" -->
                         <thead>
                             <tr>
                                 <th scope="col">Código</th>
@@ -178,5 +182,36 @@
             }
         }
     }
+</script>
+<script>
+    document.getElementById('export').onclick = function () {
+    var tableId = document.getElementById('tableData').id;
+    htmlTableToExcel(tableId, '');
+}
+
+var htmlTableToExcel = function (tableId, fileName = '') {
+
+    var excelFileName = 'datos_de_tabla_excel';
+    var TableDataType = 'application/vnd.ms-excel';
+    var selectTable = document.getElementById(tableId);
+    var htmlTable = encodeURIComponent(selectTable.outerHTML); // Codificar la tabla
+
+    fileName = fileName ? fileName + '.xls' : excelFileName + '.xls';
+    var excelFileURL = document.createElement("a");
+    document.body.appendChild(excelFileURL);
+
+    if (navigator.msSaveOrOpenBlob) {
+        var blob = new Blob(['\ufeff', htmlTable], {
+            type: TableDataType
+        });
+        navigator.msSaveOrOpenBlob(blob, fileName);
+    } else {
+
+        excelFileURL.href = 'data:' + TableDataType + ', ' + htmlTable;
+        excelFileURL.download = fileName;
+        excelFileURL.click();
+    }
+}
+
 </script>
 @endsection
