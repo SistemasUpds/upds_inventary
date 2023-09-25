@@ -2,6 +2,8 @@
 
 @section('content')
 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
 <style>
     @media screen and (max-width: 767px) {
         .scrollable-table {
@@ -43,7 +45,7 @@
     <div class="card">
         <div class="card-body">
             <div class="filter">
-                <form action="{{ url('admin/generar-pdf') }}" method="GET">
+                <!--form action="{{ url('admin/generar-pdf') }}" method="GET"-->
                     {{ csrf_field() }}
                     <input type="hidden" name="area" value="{{$area->id}}">
                     <div class="input-group mb-2">
@@ -58,11 +60,11 @@
                         </select>
                         @if ($user->permiso->exportar == 1)
                             <span class="input-group-text">
-                                <input class="btn btn-light" type="submit" value="Exportar">
+                                <button class="btn btn-light" id="export">Exportar</button>
                             </span>
                         @endif
                     </div>
-                </form>
+                <!--/form-->
             </div>
         <h5 class="card-title">Activos del Area <span>| {{$area->nombre}}</span></h5>
           <!-- Bordered Tabs -->
@@ -75,44 +77,53 @@
             </li>
           </ul>
 
-          <button id="export">Export Now</button>
-
           <div class="tab-content pt-2 scrollable-table" id="borderedTabContent">
             <div class="tab-pane fade show active" id="bordered-home" role="tabpanel" aria-labelledby="home-tab">
                 @if( count($area->items) > 0 )
-                    <table class="table table-borderless datatable" id="tableData" border="1" cellpadding="5" cellspacing="0">
-                        <!--id="tabla-items" -->
+                    <table class="table table-borderless datatable" id="tabla-items" border="1" cellpadding="5" cellspacing="0">
                         <thead>
                             <tr>
-                                <th scope="col">Código</th>
-                                <th scope="col">Activo</th>
-                                <th scope="col">Tipo de Activo</th>
-                                <th scope="col">Fecha de compra</th>
-                                <th scope="col">Descripción</th>
-                                <th scope="col">Estado</th>
+                                <th scope="col">Codigo</th>
+                                <th scope="col" style="display: none">Fecha alta</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Detalle</th>
+                                <th scope="col" style="display: none">Modelo</th>
+                                <th scope="col" style="display: none">Serie</th>
+                                <th scope="col">Categoria</th>
+                                <th scope="col">Estado del activo fijo</th>
+                                <th scope="col" style="display: none">Responsable</th>
+                                <th scope="col" style="display: none">Ubicación</th>
+                                <th scope="col">Centro de analisis</th>
                                 <th scope="col">De baja</th>
-                                <th scope="col">Ver</th>
-                                <th scope="col">Historial</th>
+                                <th scope="col" class="export-ignore">Ver</th>
+                                <th scope="col" class="export-ignore">Historial</th>
                             </tr>
                         </thead>
                         @foreach($area->items as $item)
                             <tbody>
                                 <tr>
                                     <th scope="row">{{$item->codigo}}</th>
+                                    <td style="display: none">{{ \Carbon\Carbon::parse($item->fecha_compra)->format('d/m/Y') }}</td>
+                                    <td style="display: none" class="export-ignore">{{$item->tipo_id}}</td>
                                     <td>{{$item->activo->activo}}</td>
-                                    <td style="display: none">{{$item->tipo_id}}</td>
+                                    <td class="descripcion-column" data-full-text="{{$item->descripcion}}">
+                                        {{ strlen($item->descripcion) > 15 ? substr($item->descripcion, 0, 15) . '...' : $item->descripcion }}
+                                    </td>
+                                    <td style="display: none">{{$item->modelo}}</td>
+                                    <td style="display: none">{{$item->serie}}</td>
                                     <td>{{$item->tipo->nombre}}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->fecha_compra)->format('d/m/Y') }}</td>
-                                    <td>{{ strlen($item->descripcion) > 25 ? substr($item->descripcion, 0, 25) . '...' : $item->descripcion }}</td>
-                                    <td>{{ $item->Estado->estado }}</td>
+                                    <td>{{$item->Estado->estado}}</td>
+                                    <td style="display: none">{{$item->area->encargado}}</td>
+                                    <td style="display: none">{{$item->area->nombre}}</td>
+                                    <td>{{ $item->centro->centro_analisis }}</td>
                                     @if ($item->estado == '1')
                                         <td><a type="button" data-toggle="{{$user->permiso->dar_baja_item == 0 ? '' : 'modal'}}" data-target="#modal-familiar"><span class="badge bg-success">Activo</span></a></td>
                                         @include('areas.modal')
                                     @else
                                         <td><span class="badge bg-danger">Inactivo</span></td>
                                     @endif
-                                    <td><a href="{{ url('admin/item/'.$item->id.'/show') }}"><i class="fa fa-eye"></i></a></td>
-                                    <td><a href="{{ url('admin/item/'.$item->id.'/history') }}"><i class="fa fa-history"></i></a></td>
+                                    <td class="export-ignore"><a href="{{ url('admin/item/'.$item->id.'/show') }}"><i class="fa fa-eye"></i></a></td>
+                                    <td class="export-ignore"><a href="{{ url('admin/item/'.$item->id.'/history') }}"><i class="fa fa-history"></i></a></td>
                                 </tr>
                             </tbody>
                         @endforeach
@@ -124,14 +135,15 @@
             </div>
             <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
                 @if( $cantidad > 0 )
-                    <table id="tabla-items" class="table table-borderless datatable">
+                    <table id="tabla-material" class="table table-borderless datatable">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Descripción</th>
-                                <th scope="col">Ver</th>
-                                <th scope="col">Editar</th>
+                                <th scope="col">Ubicación</th>
+                                <th scope="col" class="export-ignore">Ver</th>
+                                <th scope="col" class="export-ignore">Editar</th>
                             </tr>
                         </thead>
                         @foreach($otro as $item)
@@ -139,15 +151,17 @@
                                 <tr>
                                     <td>{{$item->id}}</td>
                                     <td scope="row">{{$item->nombre}}</td>
-                                    <td style="display: none">{{$item->area_id}}</td>
                                     <td>{{ strlen($item->descripcion) > 25 ? substr($item->descripcion, 0, 25) . '...' : $item->descripcion }}</td>
-                                    <td><a href="{{ url('admin/otro/material'.$item->id.'/show') }}"><i class="fa fa-eye"></i></a></td>
-                                    <td><a href="{{ url('admin/otro/material'.$item->id.'/edit') }}"><i class="fa fa-edit"></i></a></td>
+                                    <td>{{$item->area->nombre}}</td>
+                                    <td class="export-ignore"><a href="{{ url('admin/otro/material'.$item->id.'/show') }}"><i class="fa fa-eye"></i></a></td>
+                                    <td class="export-ignore"><a href="{{ url('admin/otro/material'.$item->id.'/edit') }}"><i class="fa fa-edit"></i></a></td>
                                 </tr>
                             </tbody>
                         @endforeach
                     </table>
-                    <a href="{{ url('admin/otro/material/descargar'.$area->id) }}">Descargar</a>
+                    @if ($user->permiso->exportar == 1)
+                        <a href="" id="export-material">Descargar</a>
+                    @endif
                 @else
                     <div class="divider"></div>
                     <p class="center-align">No hay elementos para mostrar.</p>
@@ -174,7 +188,6 @@
         var filas = tablaItems.getElementsByTagName('tr');
         for (var i = 1; i < filas.length; i++) { // Comienza en 1 para omitir la fila de encabezado
             var categoriaItem = filas[i].getElementsByTagName('td')[1].textContent; // Cambiar el índice a la columna de categoría (tipo_id)
-            console.log(categoriaItem);
             if ( categoriaSeleccionada === '' || categoriaSeleccionada === '00' || categoriaSeleccionada === categoriaItem ) {
                 filas[i].style.display = ''; // Mostrar la fila si la categoría coincide o no se ha seleccionado ninguna categoría
             } else {
@@ -183,35 +196,67 @@
         }
     }
 </script>
+
 <script>
     document.getElementById('export').onclick = function () {
-    var tableId = document.getElementById('tableData').id;
-    htmlTableToExcel(tableId, '');
-}
-
-var htmlTableToExcel = function (tableId, fileName = '') {
-
-    var excelFileName = 'datos_de_tabla_excel';
-    var TableDataType = 'application/vnd.ms-excel';
-    var selectTable = document.getElementById(tableId);
-    var htmlTable = encodeURIComponent(selectTable.outerHTML); // Codificar la tabla
-
-    fileName = fileName ? fileName + '.xls' : excelFileName + '.xls';
-    var excelFileURL = document.createElement("a");
-    document.body.appendChild(excelFileURL);
-
-    if (navigator.msSaveOrOpenBlob) {
-        var blob = new Blob(['\ufeff', htmlTable], {
-            type: TableDataType
-        });
-        navigator.msSaveOrOpenBlob(blob, fileName);
-    } else {
-
-        excelFileURL.href = 'data:' + TableDataType + ', ' + htmlTable;
-        excelFileURL.download = fileName;
-        excelFileURL.click();
+        var tableId = document.getElementById('tabla-items').id;
+        htmlTableToExcel(tableId, '');
     }
-}
 
+    document.getElementById('export-material').onclick = function () {
+        var tableId = document.getElementById('tabla-material').id;
+        htmlTableToExcel(tableId, '');
+    }
+
+    var htmlTableToExcel = function (tableId, fileName = '') {
+
+        var excelFileName = 'datos_de_tabla_excel';
+        var TableDataType = 'application/vnd.ms-excel';
+        var selectTable = document.getElementById(tableId);
+
+        // Obtener todas las celdas de la tabla
+        var cells = selectTable.querySelectorAll('td');
+        // Reemplazar el contenido de las celdas con la versión completa de la descripción
+        for (var i = 0; i < cells.length; i++) {
+            var cell = cells[i];
+            if (cell.classList.contains('descripcion-column')) { // Asegurarse de que se aplique solo a la columna de descripción
+                var truncatedText = cell.textContent;
+                var fullText = cell.getAttribute('data-full-text');
+                cell.textContent = fullText;
+            }
+        }
+        // Eliminar las celdas con la clase "export-ignore" antes de codificar la tabla
+        var cellsToExclude = selectTable.querySelectorAll('.export-ignore');
+        for (var i = 0; i < cellsToExclude.length; i++) {
+            var cell = cellsToExclude[i];
+            cell.parentNode.removeChild(cell);
+        }
+        
+        // Codificar la tabla y agregar el BOM para UTF-8
+        var htmlTable = '\uFEFF' + encodeURIComponent(selectTable.outerHTML);
+
+        // Restaurar el contenido truncado en las celdas de descripción
+        for (var i = 0; i < cells.length; i++) {
+            var cell = cells[i];
+            if (cell.classList.contains('descripcion-column')) {
+                cell.textContent = truncatedText;
+            }
+        }
+        
+        fileName = fileName ? fileName + '.xls' : excelFileName + '.xls';
+        var excelFileURL = document.createElement("a");
+        document.body.appendChild(excelFileURL);
+
+        if (navigator.msSaveOrOpenBlob) {
+            var blob = new Blob([htmlTable], {
+                type: TableDataType
+            });
+            navigator.msSaveOrOpenBlob(blob, fileName);
+        } else {
+            excelFileURL.href = 'data:' + TableDataType + ', ' + htmlTable;
+            excelFileURL.download = fileName;
+            excelFileURL.click();
+        }
+    }
 </script>
 @endsection

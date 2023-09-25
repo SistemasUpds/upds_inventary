@@ -401,25 +401,4 @@ class ItemController extends Controller
         return view('otros_materiales/show')->with('success', 'Activo actualizado correctamente.')->with('otro', $item);
     }
 
-    public function descargarMaterial($id)
-    {
-        $material = OtroMaterial::where('area_id', $id)->get();
-        $csvContent = "Num;Nombre;Descripcion;Area\n";
-        $contador = 1;
-
-        foreach ($material as $row) {
-            $nombre = str_replace('"', '', $row->nombre);
-            $descripcion = str_replace('"', '', $row->descripcion);
-            $area = str_replace('"', '', $row->area->nombre);
-            $csvContent .= "$contador;$nombre;$descripcion;$area\n";
-            $contador++;
-        }
-
-        // Descarga el archivo CSV
-        $fileName = 'otros_materiales.csv';
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename=' . $fileName);
-        echo $csvContent;
-        exit;
-    }
 }

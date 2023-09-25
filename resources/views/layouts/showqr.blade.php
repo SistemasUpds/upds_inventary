@@ -71,6 +71,12 @@
             </div>
         </div>
     </main>
+    <!-- ======= Footer ======= -->
+    <footer id="footer" class="footer">
+        <div class="copyright">
+        &copy; <strong><span>{{date('Y')}}</span></strong> | Diseño desarrollo <a href="#">UPDS POTOSÍ</a>
+        </div>
+    </footer><!-- End Footer -->
     <!-- Vendor JS Files -->
     <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js')}}"></script>
     <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
